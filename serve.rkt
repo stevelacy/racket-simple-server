@@ -3,8 +3,6 @@
 (require xml net/url)
 
 
-
-
 (define (dispatch str-path)
   ; Parse the request as a URL:
   (define url (string->url str-path))
@@ -21,12 +19,27 @@
         (font ((color "red"))
           "Unknown page: "
           ,str-path)))))
-                                                                         
+
+
+(define (build-request-page label)
+  `(html
+     (head
+       (body
+         (div
+           ,label)))))
+
+
 (define dispatch-table (make-hash))
-  
+
+(define (root query)
+  (build-request-page "root page"))
+
+(hash-set! dispatch-table "" root)
+
 (hash-set! dispatch-table "hello"
            (lambda (query)
              `(html (body "hello world"))))
+
 
 (define (handle in out)
   (define req
@@ -38,6 +51,7 @@
       (display "HTTP/1.0 200 Okay\r\n" out)
       (display "Server: k\r\nContent-Type: text/html\r\n\r\n" out)
       (display (xexpr->string xexpr) out))))
+
 
 (define (accept-and-handle listener)
   (define cust (make-custodian))
@@ -51,6 +65,7 @@
   (thread (lambda ()
             (sleep 10)
             (custodian-shutdown-all cust))))
+
 
 (define (serve port-no)
   (define listener (tcp-listen port-no 5 #t))
