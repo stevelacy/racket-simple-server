@@ -22,7 +22,6 @@
           ,str-path)))))
 
 
-
 (define (handle in out)
   (define req
     (regexp-match #rx"^GET (.+) HTTP/[0-9]+\\.[0-9]+"
