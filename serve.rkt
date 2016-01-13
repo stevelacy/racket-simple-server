@@ -1,6 +1,7 @@
 #lang racket
 
 (require xml net/url)
+(require "routes.rkt")
 
 
 (define (dispatch str-path)
@@ -9,7 +10,7 @@
   ; Extract the path part:
   (define path (map path/param-path (url-path url)))
   ; Find a handler based on the path's first element:
-  (define h (hash-ref dispatch-table (car path) #f))
+  (define h (hash-ref routes (car path) #f))
   (if h
     ; Call a handler:
     (h (url-query url))
@@ -20,25 +21,6 @@
           "Unknown page: "
           ,str-path)))))
 
-
-(define (build-request-page label)
-  `(html
-     (head
-       (body
-         (div
-           ,label)))))
-
-
-(define dispatch-table (make-hash))
-
-(define (root query)
-  (build-request-page "root page"))
-
-(hash-set! dispatch-table "" root)
-
-(hash-set! dispatch-table "hello"
-           (lambda (query)
-             `(html (body "hello world"))))
 
 
 (define (handle in out)
