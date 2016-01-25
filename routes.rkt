@@ -13,7 +13,6 @@
            ,label)))))
 
 
-
 (define (root query)
   (build-page "root"))
 (define (test query)
