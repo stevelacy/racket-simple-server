@@ -25,7 +25,7 @@
 (define (handle in out)
   (define req
     (regexp-match #rx"^GET (.+) HTTP/[0-9]+\\.[0-9]+"
-                 (read-line in)))
+      (read-line in)))
   (when req
     (regexp-match #rx"(\r\n|^)\r\n" in)
     (let ([xexpr (dispatch (list-ref req 1))])
@@ -36,7 +36,7 @@
 
 (define (accept-and-handle listener)
   (define cust (make-custodian))
-  (parameterize ([current-custodian cust])
+  (parameterize ((current-custodian cust))
   (define-values (in out) (tcp-accept listener))
   (thread (lambda ()
     (handle in out)
@@ -44,8 +44,8 @@
     (close-output-port out))))
 
   (thread (lambda ()
-            (sleep 10)
-            (custodian-shutdown-all cust))))
+    (sleep 10)
+    (custodian-shutdown-all cust))))
 
 
 (define (serve port-no)

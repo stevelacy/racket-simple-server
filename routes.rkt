@@ -2,7 +2,6 @@
 
 (provide routes)
 
-
 (define routes (make-hash))
 
 (define (build-page label)
